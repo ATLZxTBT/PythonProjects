@@ -1,9 +1,13 @@
+# SMTP: Simple Mail Transfer Protocol
 import smtplib, random
-from email.mime.text import MIMEText
+from email.message import EmailMessage
+from enum import verify
 
-print("\033[30;47;1m+==== AUTENTICAÇÃO DE CONTA =====+\033[0m")
-print("\033[30;47;1m|   Confirme seu email abaixo    |\033[0m")
-print("\033[30;47;1m+================================+\033[0m")
+print("\033[33;40;1m+==== AUTENTICAÇÃO DE CONTA =====+\033[0m")
+print("\033[33;40;1m|   Confirme seu email abaixo    |\033[0m")
+print("\033[33;40;1m+================================+\033[0m")
+
+
 while True:
     email = input("Digite seu email: ")
     if not email.endswith("@gmail.com" or "@hotmail.com" or "@outlook.com"):
@@ -17,19 +21,25 @@ code = random.sample(char, 8)
 code = "".join(code)
 
 psswrd = "hofl bamj fkak xngu"
-
-msg = MIMEText(f"Olá! Seu código de segurança é {code}")
+msg = EmailMessage()
 msg["Subject"] = "VERIFICAÇÃO DE CONTA"
 msg["From"] = email
 msg["To"] = email
+msg.set_content(f"Olá! Seu código de segurança é {code}")
 
-with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-    server.login(email, psswrd)
-    server.send_message(msg)
-print("\033[32;40;1mCódigo enviado com sucesso!\033[0m")
+try:
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        server.login(email, psswrd)
+        server.send_message(msg)
+    print("\033[32;40;1mCódigo enviado com sucesso!\033[0m")
+except Exception as e:
+    print(f"\033[31;40;1mFalha ao enviar o código!{e}\033[0m")
 
-verify = input("Digite o código recebido: ")
-if verify == code:
-    print("\033[32;1mEmail verirficado com sucesso!\033[0m")
-else:
-    print("\033[33;1mCódigo incorreto!\033[0m")
+while verify != code:
+    verify = input("Digite o código recebido: ")
+    if verify == code:
+        print("\033[32;1mEmail verirficado com sucesso!\033[0m")
+        break
+    else:
+        print("\033[31;1mCódigo incorreto!\033[0m")
+        continue
