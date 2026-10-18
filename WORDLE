@@ -1,13 +1,8 @@
 import random
+from fontTools.misc.bezierTools import splitLine
 game = True
-WordsList = ["batata", "carro", "gato", "excumungar", "poop", "xeretar",
-             "apinhado", "mandioca", "precioso", "audacioso", "nucleo",
-             "rua", "gravida", "combinar", "furtivo", "santo", "investigar",
-             "entusiasmado", "veloz", "transceder", "serpentar", "cacau",
-             "verde", "nacao", "almoco", "necessitar", "associacao", "conselho",
-             "impulsivo", "abastecer", "intrigado", "visar", "poderosamente",
-             "poderoso", "gordura", "gustavo", "megatron", "boguinha", "marijuana",
-             "jumento", "israelrulesbaby", "bob", "omniman"]
+with open("WordsList.txt", "r", encoding="utf-8") as file:
+    WordsList = file.read().splitlines()
 vidas = 5
 dif = [1, 2, 3]
 Words = []
@@ -21,7 +16,7 @@ while game:
         Words = [word for word in WordsList if len(word) > 8]
     WordChosen = random.choice(Words)
     WordChosenList = list(WordChosen)
-    print(f"\033[1mA palavra tem {len(WordChosen)} letras\033[0m ({WordChosen})")
+    print(f"\033[1mA palavra tem {len(WordChosen)} letras\033[0m")
     def verify_word():
         for letter in range(len(WordChosenList)):
             if UserGuessList[letter] == WordChosenList[letter]:
@@ -45,7 +40,7 @@ while game:
                 print(f"\nErrado! vidas restantes: {vidas}")
                 continue
             else:
-                print("\nFim de jogo")
+                print(f"\nFim de jogo, a palavra era {WordChosen}")
                 break
     finish = input("Deseja continuar? [Y/N]\n> ")
     if finish.lower() == "n":
